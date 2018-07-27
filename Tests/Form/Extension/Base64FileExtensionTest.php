@@ -56,8 +56,13 @@ class Base64FileExtensionTest extends \PHPUnit_Framework_TestCase
             ->create($this->formType)
             ->submit($file = new File(__DIR__.'/../../Fixtures/Model/binary'));
 
+//        var_dump(get_class($file));
+//        var_dump($this->formType);
+        var_dump($form->getData());
         $this->assertTrue($form->isValid());
         $this->assertSame($file, $form->getData());
+
+
     }
 
     public function testSubmitNull()

@@ -30,6 +30,6 @@ class UploadedBase64File extends UploadedFile implements Base64FileInterface
      */
     public function __construct($value, $originalName, $mimeType = null, $size = null, $error = null, $encoded = true)
     {
-        parent::__construct($this->load($value, $encoded), $originalName, $mimeType, $size, $error, true);
+        parent::__construct($this->load($value, $encoded), $originalName, $mimeType, $error, true);
     }
 }
