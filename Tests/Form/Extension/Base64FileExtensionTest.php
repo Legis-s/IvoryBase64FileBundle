@@ -21,16 +21,18 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Form\Test\TypeTestCase;
+
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class Base64FileExtensionTest extends \PHPUnit_Framework_TestCase
+class Base64FileExtensionTest extends TypeTestCase
 {
     /**
      * @var FormFactoryInterface
      */
-    private $factory;
+    protected $factory;
 
     /**
      * @var string
@@ -53,13 +55,11 @@ class Base64FileExtensionTest extends \PHPUnit_Framework_TestCase
     public function testSubmitFile()
     {
         $form = $this->factory
-            ->create($this->formType)
-            ->submit($file = new File(__DIR__.'/../../Fixtures/Model/binary'));
+            ->create($this->formType,$file = new File(__DIR__.'/../../Fixtures/Model/binary'))
+            ->submit($file);
 
-//        var_dump(get_class($file));
-//        var_dump($this->formType);
-        var_dump($form->getData());
         $this->assertTrue($form->isValid());
+//        see /vendor/symfony/form/NativeRequestHandler.php, function isFileUpload - it always be null here
         $this->assertSame($file, $form->getData());
 
 
@@ -87,7 +87,7 @@ class Base64FileExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($submitData['value'], $data->getData(true, false));
         $this->assertSame($submitData['name'], $data->getClientOriginalName());
         $this->assertSame('application/octet-stream', $data->getClientMimeType());
-        $this->assertNull($data->getClientSize());
+        $this->assertNull($data->getSize());
     }
 
     public function testSubmitMaximalValidBase64()
@@ -102,7 +102,7 @@ class Base64FileExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($submitData['value'], $data->getData(true, false));
         $this->assertSame($submitData['name'], $data->getClientOriginalName());
         $this->assertSame($submitData['mimeType'], $data->getClientMimeType());
-        $this->assertSame($submitData['size'], $data->getClientSize());
+        $this->assertSame($submitData['size'], $data->getSize());
     }
 
     public function testSubmitInvalidStructure()
